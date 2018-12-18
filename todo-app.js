@@ -1,20 +1,14 @@
-const todos = [{
-    title: 'Order cat food',
-    complete: true
-}, {
-    title: 'Clean kitchen',
-    complete: false      
-}, {
-    title: 'Buy food',
-    complete: false
-}, {
-    title: 'Do work',
-    complete: true
-}]
+let todos = []
 
 const filters = {
     searchText: '',
     hideCompleted: false
+}
+
+const todosJSON = localStorage.getItem('todos')
+
+if(todosJSON !==null ){
+    todos = JSON.parse(todosJSON)
 }
 
 const renderTodos = function (todos, filters) {
@@ -43,7 +37,13 @@ const renderTodos = function (todos, filters) {
     
     filteredTodos.forEach(function (todo){
         const p = document.createElement('p')
-        p.textContent = todo.title
+        
+        if(todo.title.length > 0){
+            p.textContent = todo.title
+        } else {
+            p.textContent = 'unnamed note'
+        }
+
         document.querySelector('#todos').appendChild(p)
     })
 
@@ -63,6 +63,7 @@ document.querySelector('#add-todo').addEventListener('submit', function(e){
         title: e.target.elements.todoTitle.value,
         complete: false
     })
+    localStorage.setItem('todos', JSON.stringify(todos))
     renderTodos(todos, filters)
     e.target.elements.todoTitle.value = ''
 })
